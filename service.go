@@ -5,7 +5,8 @@ import (
 
 	"fmt"
 	"os"
-	//"github.com/pamelag/go-microservice-demo/api"
+
+	"github.com/pamelag/go-microservice-demo/api"
 )
 
 func main() {

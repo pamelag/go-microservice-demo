@@ -1,0 +1,50 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: go-microservice-demo
+  labels:
+    app: go-microservice-demo
+spec:
+  # use NodePort here to be able to access the port on each node
+  type: NodePort
+  ports:
+  - port: 8080
+  selector:
+    app: go-microservice-demo
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: go-microservice-demo
+spec:
+  replicas: 1
+  minReadySeconds: 30
+  template:
+    metadata:
+      labels:
+        app: go-microservice-demo
+    spec:
+      containers:
+      - name: go-microservice-demo
+        image: "go-microservice-demo"
+        imagePullPolicy: IfNotPresent
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "250m"
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 8080
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8080
+          initialDelaySeconds: 30
+          timeoutSeconds: 5
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8080
+          timeoutSeconds: 5
